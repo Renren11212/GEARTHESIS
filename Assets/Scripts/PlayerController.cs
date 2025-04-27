@@ -1,36 +1,40 @@
 using UnityEngine;
 
-/// <summary>
-/// プレイヤーの操作をつかさどるクラス
-/// </summary>
-public class PlayerController : MonoBehaviour
+public class EntityController : MonoBehaviour
 {
-    [SerializeField, Tooltip("移動制限エリア")]
-    private Area area;
+    [SerializeField, Header("Rayの長さ")]
+    private float _raylength = 1.0f;
 
-    private bool isAreaSelected = true;
+    [SerializeField, Header("Rayのオフセット")]
+    private float _rayOffset = 0.5f;
 
-    private void Awake()
+    [SerializeField, Header("接地レイヤー")]
+    private LayerMask _groundLayer;
+
+    public bool IsGrounded()
     {
-        if (area == null)
-        {
-            isAreaSelected = false;
-        }
+        return Physics.Raycast(
+        transform.position + Vector3.down * _rayOffset,
+        Vector3.down,
+        _raylength,
+        _groundLayer
+        );
     }
 
+    /// <summary>
+    /// 移動処理
+    /// </summary>
     public void Move(Vector3 direction)
     {
         Vector3 newPosition = transform.position + direction;
 
-        // 移動制限エリアが指定されているならそれに従う
-        if (area.IsContain(newPosition) && isAreaSelected)
-        {
-            transform.position = newPosition;
-        }
+        transform.position = newPosition;
+    }
 
-        else
-        {
-            transform.position = newPosition;
-        }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = IsGrounded() ? Color.green : Color.red;
+
+        Gizmos.DrawRay(transform.position + Vector3.down * _rayOffset, Vector3.down * _raylength);
     }
 }
