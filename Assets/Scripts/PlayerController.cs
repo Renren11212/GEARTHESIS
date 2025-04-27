@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class EntityController : MonoBehaviour
 {
     [SerializeField, Header("Rayの長さ")]
     private float _raylength = 1.0f;

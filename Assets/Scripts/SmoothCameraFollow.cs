@@ -3,9 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class SmoothCameraFollow : MonoBehaviour
 {
-    [SerializeField] private Transform _target;
-    [SerializeField] private float _smoothTime = 0.3f;
-    [SerializeField] private Vector3 _offset = new Vector3(0, 2, -5);
+    [SerializeField] 
+    private Transform _target;
+
+    [SerializeField] 
+    private float _smoothTime = 0.3f;
+    
+    [SerializeField] 
+    private Vector3 _offset = new Vector3(0, 2, -5);
     
     private Vector3 _currentVelocity = Vector3.zero;
 

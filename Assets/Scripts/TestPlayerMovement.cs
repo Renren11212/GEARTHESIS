@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(EntityController))]
 public class TestPlayerMovement : MonoBehaviour
 {
-    private PlayerController _playerController;
+    private EntityController _playerController;
 
     [SerializeField]
     private float _moveSpeed = 1f;
 
     private void Start()
     {
-        _playerController = GetComponent<PlayerController>();
+        _playerController = GetComponent<EntityController>();
     }
 
     private void Update()
