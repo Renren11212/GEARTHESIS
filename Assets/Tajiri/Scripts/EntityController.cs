@@ -2,15 +2,26 @@ using UnityEngine;
 
 public class EntityController : MonoBehaviour
 {
-    [SerializeField, Header("Rayの長さ")]
+    [Header("接地判定設定")]
+    [SerializeField]
     private float _raylength = 1.0f;
-
-    [SerializeField, Header("Rayのオフセット")]
+    [SerializeField]
     private float _rayOffset = 0.5f;
-
-    [SerializeField, Header("接地レイヤー")]
+    [SerializeField]
     private LayerMask _groundLayer;
 
+    [Space(10)]
+
+    [Header("衝突判定設定")]
+    [SerializeField]
+    private float _colliderRadius = 0.5f;
+    [SerializeField]
+    private float _colliderHeight = 2.0f;
+    [SerializeField]
+    private float _colliderOffset = 0.0f;
+    [SerializeField] 
+    private float _skinWidth = 0.1f;
+    
     public bool IsGrounded()
     {
         return Physics.Raycast(
@@ -31,10 +42,26 @@ public class EntityController : MonoBehaviour
         transform.position = newPosition;
     }
 
-    private void OnDrawGizmos()
+    private void CheckCollision()
+    {
+        
+    }
+
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = IsGrounded() ? Color.green : Color.red;
 
         Gizmos.DrawRay(transform.position + Vector3.down * _rayOffset, Vector3.down * _raylength);
+
+        // カプセルコライダーの可視化
+        Gizmos.color = Color.cyan;
+        Vector3 p1 = transform.position + Vector3.up * (_colliderRadius + _skinWidth);
+        Vector3 p2 = transform.position + Vector3.up * (_colliderHeight - _colliderRadius - _skinWidth);
+        Gizmos.DrawWireSphere(p1, _colliderRadius);
+        Gizmos.DrawWireSphere(p2, _colliderRadius);
+        Gizmos.DrawLine(p1 + Vector3.forward * _colliderRadius, p2 + Vector3.forward * _colliderRadius);
+        Gizmos.DrawLine(p1 - Vector3.forward * _colliderRadius, p2 - Vector3.forward * _colliderRadius);
+        Gizmos.DrawLine(p1 + Vector3.right * _colliderRadius, p2 + Vector3.right * _colliderRadius);
+        Gizmos.DrawLine(p1 - Vector3.right * _colliderRadius, p2 - Vector3.right * _colliderRadius);
     }
 }
