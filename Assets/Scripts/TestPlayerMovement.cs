@@ -3,14 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class TestPlayerMovement : MonoBehaviour
 {
-    private PlayerController playerController;
+    private PlayerController _playerController;
 
     [SerializeField]
-    private float _moveSpeed = 1f; // 移動速度
+    private float _moveSpeed = 1f;
 
     private void Start()
     {
-        playerController = GetComponent<PlayerController>();
+        _playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -18,11 +18,11 @@ public class TestPlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal") * Time.deltaTime *_moveSpeed;
         float vertical = Input.GetAxisRaw("Vertical") * Time.deltaTime * _moveSpeed;
 
-        // 方向ベクトルを計算
+        // 正規化
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
 
-        Vector3 movement = direction * _moveSpeed * Time.deltaTime;
+        Vector3 movement = _moveSpeed * Time.deltaTime * direction;
 
-        playerController.Move(movement);
+        _playerController.Move(movement);
     }
 }
