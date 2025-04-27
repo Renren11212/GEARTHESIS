@@ -7,32 +7,18 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("Rayのオフセット")]
     private float _rayOffset = 0.5f;
-    private string _tag = "Ground";
-    private bool _isGrounded = false;
 
-    /// <summary>
-    /// プレイヤーが地面に接触しているかどうかを取得します.
-    /// </summary>
-    /// <remarks>地面に接触している場合はtrue, それ以外はfalse</remarks>
-    public bool IsGrounded {get { return _isGrounded; } }
+    [SerializeField, Header("接地レイヤー")]
+    private LayerMask _groundLayer;
 
-    private void Update()
+    public bool IsGrounded()
     {
-        _isGrounded = CheckIsGrounded();
-    }
-
-    private bool CheckIsGrounded()
-    {
-        if (Physics.Raycast(transform.position + Vector3.down * _rayOffset, Vector3.down, out RaycastHit hit, _raylength))
-        {
-            // Groundレイヤーに当たった場合
-            if (hit.collider.CompareTag(_tag)) return true;
-
-            else return false;
-        }
-
-        // Rayが当たらなかった場合
-        else return false;
+        return Physics.Raycast(
+        transform.position + Vector3.down * _rayOffset,
+        Vector3.down,
+        _raylength,
+        _groundLayer
+        );
     }
 
     /// <summary>
@@ -47,9 +33,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (_isGrounded) Gizmos.color = Color.green;
-        else Gizmos.color = Color.red;
-        
+        Gizmos.color = IsGrounded() ? Color.green : Color.red;
+
         Gizmos.DrawRay(transform.position + Vector3.down * _rayOffset, Vector3.down * _raylength);
     }
 }
