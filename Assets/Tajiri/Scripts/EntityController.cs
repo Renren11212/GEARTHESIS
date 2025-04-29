@@ -19,9 +19,12 @@ public class EntityController : MonoBehaviour
     private float _colliderHeight = 2.0f;
     [SerializeField]
     private float _colliderOffset = 0.0f;
-    [SerializeField] 
-    private float _skinWidth = 0.1f;
+    [SerializeField]
+    private LayerMask _collisionLayer;
     
+    /// <summary>
+    /// 接地判定
+    /// </summary>
     public bool IsGrounded()
     {
         return Physics.Raycast(
@@ -39,14 +42,26 @@ public class EntityController : MonoBehaviour
     {
         Vector3 newPosition = transform.position + direction;
 
+        if (CheckCollision(newPosition)) return;
+
         transform.position = newPosition;
     }
 
-    private void CheckCollision()
+    /// <summary>
+    /// 衝突判定
+    /// </summary>
+    private bool CheckCollision(Vector3 targetPosition)
     {
-        
+        return Physics.CheckCapsule(
+            targetPosition + Vector3.up * _colliderOffset,
+            targetPosition + Vector3.up * (_colliderHeight + _colliderOffset),
+            _colliderRadius
+        );
     }
 
+    /// <summary>
+    /// Gizmosの描画
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = IsGrounded() ? Color.green : Color.red;
@@ -54,9 +69,11 @@ public class EntityController : MonoBehaviour
         Gizmos.DrawRay(transform.position + Vector3.down * _rayOffset, Vector3.down * _raylength);
 
         // カプセルコライダーの可視化
-        Gizmos.color = Color.cyan;
-        Vector3 p1 = transform.position + Vector3.up * (_colliderRadius + _skinWidth);
-        Vector3 p2 = transform.position + Vector3.up * (_colliderHeight - _colliderRadius - _skinWidth);
+        Gizmos.color = CheckCollision(transform.position) ? Color.red : Color.green;
+
+        Vector3 p1 = transform.position + Vector3.up * _colliderRadius + Vector3.up * _colliderOffset;
+        Vector3 p2 = transform.position + Vector3.up * (_colliderHeight - _colliderRadius) + Vector3.up * _colliderOffset;
+
         Gizmos.DrawWireSphere(p1, _colliderRadius);
         Gizmos.DrawWireSphere(p2, _colliderRadius);
         Gizmos.DrawLine(p1 + Vector3.forward * _colliderRadius, p2 + Vector3.forward * _colliderRadius);
