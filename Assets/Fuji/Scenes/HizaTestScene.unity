@@ -421,6 +421,7 @@ GameObject:
   - component: {fileID: 1389452716}
   - component: {fileID: 1389452720}
   - component: {fileID: 1389452719}
+  - component: {fileID: 1389452721}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -520,12 +521,34 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389452714}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1265b78e44f32747847d6e0709f7067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 10
+--- !u!114 &1389452721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389452714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b167005fe73c04d8bdffc81b00cb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpDuration: 1
+  _baseSpeed: 1
+  _dashSpeed: 3
+  _dashRatio: 3
+  _forwardKeyCode: 119
+  _behindKeyCode: 115
+  _rightKeyCode: 100
+  _leftKeyCode: 97
+  _dashKeyCode: 304
+  _jumpKeyCode: 32
 --- !u!1 &1697762047
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,7 +903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 1389452718}
-  _smoothTime: 0.3
+  _smoothTime: 0.1
   _offset: {x: 0, y: 2, z: -5}
 --- !u!1 &2013410473
 GameObject:
