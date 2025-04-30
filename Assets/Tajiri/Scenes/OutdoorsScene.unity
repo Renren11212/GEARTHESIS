@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 19988432}
-  - component: {fileID: 19988431}
   - component: {fileID: 19988430}
   m_Layer: 0
   m_Name: PlayerInput
@@ -147,19 +146,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d0cece66916fd94a8a9dc9c1236d7a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _keyConfigManager: {fileID: 19988431}
---- !u!114 &19988431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 19988429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b1b2355ec211a74190ca75d6fd6b55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &19988432
@@ -585,8 +571,8 @@ GameObject:
   - component: {fileID: 1389452718}
   - component: {fileID: 1389452717}
   - component: {fileID: 1389452716}
-  - component: {fileID: 1389452720}
   - component: {fileID: 1389452719}
+  - component: {fileID: 1389452721}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -685,7 +671,7 @@ MonoBehaviour:
   _collisionLayer:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1389452720
+--- !u!114 &1389452721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -694,11 +680,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1389452714}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1265b78e44f32747847d6e0709f7067, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e91d56b52603ae47a4c91b2917542db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _input: {fileID: 19988430}
-  _moveSpeed: 10
+  _speed: 6.99
 --- !u!1 &1697762047
 GameObject:
   m_ObjectHideFlags: 0

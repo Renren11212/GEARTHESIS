@@ -1,82 +1,41 @@
-@startuml InputSystemUML
+@startuml ConfigurableInputDesign
 
 skinparam class {
     BackgroundColor #FFFBD6
     BorderColor #333333
-    ArrowColor #333333
 }
 
 package "入力システム" {
-    enum InputActionType <<enum>> {
-        MOVE_FORWARD
-        MOVE_BACKWARD
-        JUMP
-        PRIMARY_ATTACK
-        SECONDARY_ATTACK
+    interface IGameAction <<interface>> {
+        +Execute()
+        +CurrentInputType { get; set; }
+        +DefaultInputType { get; }
     }
 
     class PlayerInput {
-        -_keyConfigManager: KeyConfigManager
-        -_currentInputDevice: IInputDevice
-        +ActionEvents: Dictionary<InputActionType, System.Action>
-        +InitializeInputSystem()
-        +RegisterAction()
-        +CheckAllInputs()
-        +SwitchInputDevice()
+        -_actions: List<IGameAction>
+        +RegisterAction(IGameAction)
+        +UpdateInput()
     }
 
-    interface IInputDevice <<interface>> {
-        +GetKeyDown(KeyCode): bool
-        +GetKey(KeyCode): bool
-    }
-
-    class KeyConfigManager {
-        -_defaultBindings: Dictionary<InputActionType, KeyCode>
-        -_currentBindings: Dictionary<InputActionType, KeyCode>
-        +ChangeKeyBinding()
-        +GetKeyForAction()
+    class InputConfigManager {
+        +ApplyPreset(InputPreset)
         +ResetToDefault()
-        +SaveToJson()
-        +LoadFromJson()
     }
 
-    class KeyboardInputDevice {
-        +GetKeyDown(KeyCode): bool
-        +GetKey(KeyCode): bool
-    }
-
-    class GamepadInputDevice {
-        +GetKeyDown(KeyCode): bool
-        +GetKey(KeyCode): bool
+    class InputPreset {
+        +Dictionary<ActionType, InputPressType> Overrides
     }
 }
 
-' 関係性定義
-PlayerInput "1" --> "1" KeyConfigManager
-PlayerInput "1" --> "1" IInputDevice
-KeyConfigManager "1" *--> "n" InputActionType
-KeyConfigManager "1" *--> "n" KeyCode
+PlayerInput "1" *--> "n" IGameAction
+InputConfigManager .> IGameAction : 設定適用
+InputConfigManager "1" --> "1" InputPreset
 
-KeyboardInputDevice ..|> IInputDevice
-GamepadInputDevice ..|> IInputDevice
-
-' 辞書型の可視化
-note top of PlayerInput
-    ActionEvents:
-    Dictionary<InputActionType, System.Action>
-    └─ Key: 入力種別
-    └─ Value: 実行するデリゲート
-end note
-
-note bottom of KeyConfigManager
-    _currentBindings:
-    Dictionary<InputActionType, KeyCode>
-    └─ Key: 入力種別
-    └─ Value: 割り当てキーコード
-
-    _defaultBindings:
-    Dictionary<InputActionType, KeyCode>
-    └─ 初期設定値
+note right of IGameAction
+    ▼ 柔軟性を保つために
+    ・DefaultInputType：基本設定
+    ・CurrentInputType：現在の設定（変更可能）
 end note
 
 @enduml
