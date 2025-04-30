@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// プレイヤーの入力を監視するクラス
+/// </summary>
 public class PlayerInput : MonoBehaviour
 {
     private List<IGameAction> _actions = new();
