@@ -46,11 +46,17 @@ public class KeyConfigManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// InputActionTypeに紐づけられたKeyCodeを取得する
+    /// </summary>
     public KeyCode GetKeyForAction(InputActionType actionType)
     {
         return _currentBindings.TryGetValue(actionType, out var key) ? key : KeyCode.None;
     }
 
+    /// <summary>
+    /// キーコンフィグを初期値に戻す
+    /// </summary>
     public void ResetToDefault()
     {
         _currentBindings = new Dictionary<InputActionType, KeyCode>(_defaultBindings);

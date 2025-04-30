@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(KeyConfigManager))]
 public class PlayerInput : MonoBehaviour
 {
     // キー設定を管理するマネージャー
@@ -14,6 +15,7 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
+        _keyConfigManager = GetComponent<KeyConfigManager>();
         InitializeInputSystem();
     }
 
@@ -54,7 +56,7 @@ public class PlayerInput : MonoBehaviour
         KeyCode key = _keyConfigManager.GetKeyForAction(actionType);
 
         // そのキーが押されたとき
-        if (_currentInputDevice.GetKeyDown(key))
+        if (_currentInputDevice.GetKey(key))
         {
             ActionEvents[actionType]?.Invoke();
             Debug.Log($"Action {actionType} is invoked");
@@ -89,7 +91,7 @@ public interface IInputDevice
     bool GetKey(KeyCode key);
 }
 
-// キーボード入力実装
+// キーボード入力実装(TODO:GetKey想定のアクションかGetKeyDown想定のアクションかどうやって識別しようかな)
 public class KeyboardInputDevice : IInputDevice
 {
     public bool GetKeyDown(KeyCode key) => Input.GetKeyDown(key);

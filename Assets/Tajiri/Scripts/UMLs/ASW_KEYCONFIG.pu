@@ -1,0 +1,82 @@
+@startuml InputSystemUML
+
+skinparam class {
+    BackgroundColor #FFFBD6
+    BorderColor #333333
+    ArrowColor #333333
+}
+
+package "入力システム" {
+    enum InputActionType <<enum>> {
+        MOVE_FORWARD
+        MOVE_BACKWARD
+        JUMP
+        PRIMARY_ATTACK
+        SECONDARY_ATTACK
+    }
+
+    class PlayerInput {
+        -_keyConfigManager: KeyConfigManager
+        -_currentInputDevice: IInputDevice
+        +ActionEvents: Dictionary<InputActionType, System.Action>
+        +InitializeInputSystem()
+        +RegisterAction()
+        +CheckAllInputs()
+        +SwitchInputDevice()
+    }
+
+    interface IInputDevice <<interface>> {
+        +GetKeyDown(KeyCode): bool
+        +GetKey(KeyCode): bool
+    }
+
+    class KeyConfigManager {
+        -_defaultBindings: Dictionary<InputActionType, KeyCode>
+        -_currentBindings: Dictionary<InputActionType, KeyCode>
+        +ChangeKeyBinding()
+        +GetKeyForAction()
+        +ResetToDefault()
+        +SaveToJson()
+        +LoadFromJson()
+    }
+
+    class KeyboardInputDevice {
+        +GetKeyDown(KeyCode): bool
+        +GetKey(KeyCode): bool
+    }
+
+    class GamepadInputDevice {
+        +GetKeyDown(KeyCode): bool
+        +GetKey(KeyCode): bool
+    }
+}
+
+' 関係性定義
+PlayerInput "1" --> "1" KeyConfigManager
+PlayerInput "1" --> "1" IInputDevice
+KeyConfigManager "1" *--> "n" InputActionType
+KeyConfigManager "1" *--> "n" KeyCode
+
+KeyboardInputDevice ..|> IInputDevice
+GamepadInputDevice ..|> IInputDevice
+
+' 辞書型の可視化
+note top of PlayerInput
+    ActionEvents:
+    Dictionary<InputActionType, System.Action>
+    └─ Key: 入力種別
+    └─ Value: 実行するデリゲート
+end note
+
+note bottom of KeyConfigManager
+    _currentBindings:
+    Dictionary<InputActionType, KeyCode>
+    └─ Key: 入力種別
+    └─ Value: 割り当てキーコード
+
+    _defaultBindings:
+    Dictionary<InputActionType, KeyCode>
+    └─ 初期設定値
+end note
+
+@enduml
