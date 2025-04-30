@@ -1,0 +1,27 @@
+@startuml KeyBindingArchitecture
+
+class KeyConfigManager {
+    -_keyBindings: Dictionary<InputActionType, KeyCode>
+    +ChangeKeyBinding()
+    +GetKeyForAction()
+    +ResetToDefault()
+    +SaveToJson()
+    +LoadFromJson()
+}
+
+enum InputActionType {
+    MOVE_FORWARD
+    JUMP
+    ATTACK
+}
+
+class PlayerInput {
+    -_keyConfigManager: KeyConfigManager
+    +CheckInput()
+}
+
+KeyConfigManager "1" --> "1..*" InputActionType
+KeyConfigManager "1" --> "1..*" KeyCode
+PlayerInput --> KeyConfigManager
+
+@enduml

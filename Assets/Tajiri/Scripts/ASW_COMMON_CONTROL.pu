@@ -1,0 +1,73 @@
+@startuml UniversalKeyConfigSystem
+
+skinparam class {
+    BackgroundColor #FFFBD6
+    BorderColor #333333
+    ArrowColor #333333
+}
+
+package "入力システム" {
+    interface IChangeableKeyConfig <<interface>> {
+        +ChangeKey(InputActionType, KeyCode): void
+        +GetCurrentKey(InputActionType): KeyCode
+        +ResetToDefault()
+    }
+
+    enum InputActionType {
+        MOVE_FORWARD
+        MOVE_BACKWARD
+        MOVE_LEFT
+        MOVE_RIGHT
+        JUMP
+        PRIMARY_ATTACK
+        SECONDARY_ATTACK
+        SPECIAL_ACTION_1
+        SPECIAL_ACTION_2
+    }
+
+    class KeyConfigManager implements IChangeableKeyConfig {
+        +ChangeKey(InputActionType, KeyCode)
+        +GetCurrentKey(InputActionType)
+        +ResetToDefault()
+        -_keyBindings: Dictionary<InputActionType, KeyCode>
+        +SaveConfigToFile()
+        +LoadConfigFromFile()
+    }
+
+    class PlayerInput {
+        +Initialize(KeyConfigManager)
+        -SetupInputEvents()
+        +GetKeyDown(InputActionType): bool
+    }
+
+    package "アクションシステム" {
+        interface ICharacterAction <<interface>> {
+            +Execute()
+        }
+
+        class MovementAction implements ICharacterAction
+        class JumpAction implements ICharacterAction
+        class AttackAction implements ICharacterAction
+    }
+}
+
+PlayerInput --> KeyConfigManager : 設定を参照
+PlayerInput ..> InputActionType : 入力種別判定
+KeyConfigManager ..> InputActionType : 管理対象
+PlayerInput -> ICharacterAction : 入力に応じて実行
+
+note right of IChangeableKeyConfig
+    ▼ 汎用キー設定契約
+    ・あらゆる入力操作を管理可能
+    ・UIオプション画面で一括設定
+end note
+
+note left of InputActionType
+    ▼ 入力種別の例
+    MOVE_FORWARD → Wキー
+    JUMP → Spaceキー
+    PRIMARY_ATTACK → マウス左クリック
+    SPECIAL_ACTION_1 → Qキー
+end note
+
+@enduml

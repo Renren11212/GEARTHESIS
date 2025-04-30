@@ -1,0 +1,14 @@
+public enum InputActionType
+{
+    // 攻撃系
+    RIGHT_HAND_ATTACK,
+    LEFT_HAND_ATTACK,
+    RIGHT_SHOULDER_ATTACK,
+    LEFT_SHOULDER_ATTACK,
+    MOVE_FORWARD,
+    MOVE_BACK,
+    MOVE_RIGHT,
+    MOVE_LEFT,
+    JUMP,
+    ATTACK
+}
