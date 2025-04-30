@@ -27,6 +27,7 @@ public class TestPlayerMovement : MonoBehaviour
         _input.RegisterAction(InputActionType.MOVE_LEFT,    MoveLeft);
     }
 
+    /* 正規化してないからゴミだよ！！！ */
     private void MoveForward()
     {
         float deltaMove = Time.deltaTime * _moveSpeed;

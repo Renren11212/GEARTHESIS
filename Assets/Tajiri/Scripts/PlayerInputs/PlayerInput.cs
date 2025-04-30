@@ -59,7 +59,7 @@ public class PlayerInput : MonoBehaviour
         if (_currentInputDevice.GetKey(key))
         {
             ActionEvents[actionType]?.Invoke();
-            Debug.Log($"Action {actionType} is invoked");
+            //Debug.Log($"Action {actionType} is invoked");
         }
     }
 
