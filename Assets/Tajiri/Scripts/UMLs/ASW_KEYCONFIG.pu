@@ -1,0 +1,41 @@
+@startuml ConfigurableInputDesign
+
+skinparam class {
+    BackgroundColor #FFFBD6
+    BorderColor #333333
+}
+
+package "入力システム" {
+    interface IGameAction <<interface>> {
+        +Execute()
+        +CurrentInputType { get; set; }
+        +DefaultInputType { get; }
+    }
+
+    class PlayerInput {
+        -_actions: List<IGameAction>
+        +RegisterAction(IGameAction)
+        +UpdateInput()
+    }
+
+    class InputConfigManager {
+        +ApplyPreset(InputPreset)
+        +ResetToDefault()
+    }
+
+    class InputPreset {
+        +Dictionary<ActionType, InputPressType> Overrides
+    }
+}
+
+PlayerInput "1" *--> "n" IGameAction
+InputConfigManager .> IGameAction : 設定適用
+InputConfigManager "1" --> "1" InputPreset
+
+note right of IGameAction
+    ▼ 柔軟性を保つために
+    ・DefaultInputType：基本設定
+    ・CurrentInputType：現在の設定（変更可能）
+end note
+
+@enduml
