@@ -1,6 +1,5 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 
 public class DirectionalAttackBase : MonoBehaviour, IGameAction
 {
@@ -11,25 +10,27 @@ public class DirectionalAttackBase : MonoBehaviour, IGameAction
     public InputPressType DefaultInputType => InputPressType.INSTANT;
     // ランタイムで変更可能
     public InputPressType CurrentInputType { get; set; }
-    
     // デフォルトのキー入力
     public KeyCode DefaultKeyCode => KeyCode.Mouse0;
     // ランタイムで変更可能
     public KeyCode CurrentKeyCode { get; set; }
-
     public bool CanExecute() => true;
 
-    // TODO ローカル座標で指定できるようにする
+    [Header("攻撃判定ベジェ曲線設定")]
     [SerializeField] private Vector3 _point0; // 始点
     [SerializeField] private Vector3 _point1; // 制御点
     [SerializeField] private Vector3 _point2; // 終点
 
+    private Vector3 GetLocalPoint(Vector3 point) => transform.position + transform.rotation * point;
+    private Vector3 _localPoint0 => GetLocalPoint(_point0);
+    private Vector3 _localPoint1 => GetLocalPoint(_point1);
+    private Vector3 _localPoint2 => GetLocalPoint(_point2);
 
-    private Vector3 thisPoint => transform.position;
-
+    [Header("攻撃設定")]
     [SerializeField] private float _attackDuration = 0.5f;
     [SerializeField] private float _raycastInterval = 0.05f;
-    [SerializeField] private float _raycastDistance = 0.1f;
+    [SerializeField] private float _rayLength = 1.0f;
+    [SerializeField] private LayerMask _layerMask;
 
     private void Awake()
     {
@@ -57,11 +58,13 @@ public class DirectionalAttackBase : MonoBehaviour, IGameAction
         while (elapsed < _attackDuration)
         {
             float t = elapsed / _attackDuration;
-            Vector3 point = GetQuadraticBezierPoint(_point0, _point1, _point2, t);
-            Vector3 next = GetQuadraticBezierPoint(_point0, _point1, _point2, t + 0.01f);
+
+            Vector3 point = GetQuadraticBezierPoint(_localPoint0, _localPoint1, _localPoint2, t);
+            Vector3 next = GetQuadraticBezierPoint(_localPoint0, _localPoint1, _localPoint2, t + 0.01f);
+
             Vector3 direction = (next - point).normalized;
 
-            if (Physics.Raycast(point, direction, out RaycastHit hit, _raycastDistance))
+            if (Physics.Raycast(point, direction, out RaycastHit hit, _rayLength, _layerMask))
             {
                 Debug.Log($"Hit: {hit.collider.name}");
                 // ダメージ処理など
@@ -81,23 +84,27 @@ public class DirectionalAttackBase : MonoBehaviour, IGameAction
         return Vector3.Lerp(a, b, t);
     }
 
+    #if UNITY_EDITOR
     // シーンビューで可視化
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Vector3 prevPoint = _point0;
+        Gizmos.color = Color.blue;
+        Vector3 prevPoint = _localPoint0;
         for (int i = 1; i <= 20; i++)
         {
             float t = i / 20f;
-            Vector3 point = GetQuadraticBezierPoint(_point0, _point1, _point2, t);
+            Vector3 point = GetQuadraticBezierPoint(_localPoint0, _localPoint1, _localPoint2, t);
             Gizmos.DrawLine(prevPoint, point);
             prevPoint = point;
         }
 
         // 制御点に球表示
         Gizmos.color = Color.green;
-        Gizmos.DrawSphere(_point0, 0.05f);
-        Gizmos.DrawSphere(_point1, 0.05f);
-        Gizmos.DrawSphere(_point2, 0.05f);
+        Gizmos.DrawSphere(_localPoint0, 0.05f);
+        Gizmos.DrawSphere(_localPoint2, 0.05f);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(_localPoint1, 0.05f);
     }
+    #endif
 }

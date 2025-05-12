@@ -52,11 +52,10 @@ public class EntityController : MonoBehaviour
     /// </summary>
     private bool CheckCollision(Vector3 targetPosition)
     {
-        return Physics.CheckCapsule(
-            targetPosition + Vector3.up * _colliderOffset,
-            targetPosition + Vector3.up * (_colliderHeight + _colliderOffset),
-            _colliderRadius
-        );
+        Vector3 p1 = targetPosition + transform.rotation * (Vector3.up * _colliderRadius + Vector3.up * _colliderOffset);
+        Vector3 p2 = targetPosition + transform.rotation * (Vector3.up * (_colliderHeight - _colliderRadius) + Vector3.up * _colliderOffset);
+
+        return Physics.CheckCapsule(p1, p2, _colliderRadius, _collisionLayer);
     }
 
     /// <summary>
@@ -71,14 +70,16 @@ public class EntityController : MonoBehaviour
         // カプセルコライダーの可視化
         Gizmos.color = CheckCollision(transform.position) ? Color.red : Color.green;
 
-        Vector3 p1 = transform.position + Vector3.up * _colliderRadius + Vector3.up * _colliderOffset;
-        Vector3 p2 = transform.position + Vector3.up * (_colliderHeight - _colliderRadius) + Vector3.up * _colliderOffset;
+        Vector3 p1 = transform.position + transform.rotation * (Vector3.up * _colliderRadius + Vector3.up * _colliderOffset);
+        Vector3 p2 = transform.position + transform.rotation * (Vector3.up * (_colliderHeight - _colliderRadius) + Vector3.up * _colliderOffset);
 
         Gizmos.DrawWireSphere(p1, _colliderRadius);
         Gizmos.DrawWireSphere(p2, _colliderRadius);
-        Gizmos.DrawLine(p1 + Vector3.forward * _colliderRadius, p2 + Vector3.forward * _colliderRadius);
-        Gizmos.DrawLine(p1 - Vector3.forward * _colliderRadius, p2 - Vector3.forward * _colliderRadius);
-        Gizmos.DrawLine(p1 + Vector3.right * _colliderRadius, p2 + Vector3.right * _colliderRadius);
-        Gizmos.DrawLine(p1 - Vector3.right * _colliderRadius, p2 - Vector3.right * _colliderRadius);
+
+        // カプセルの線を回転に対応させる
+        Gizmos.DrawLine(p1 + transform.rotation * (Vector3.forward * _colliderRadius), p2 + transform.rotation * (Vector3.forward * _colliderRadius));
+        Gizmos.DrawLine(p1 - transform.rotation * (Vector3.forward * _colliderRadius), p2 - transform.rotation * (Vector3.forward * _colliderRadius));
+        Gizmos.DrawLine(p1 + transform.rotation * (Vector3.right * _colliderRadius), p2 + transform.rotation * (Vector3.right * _colliderRadius));
+        Gizmos.DrawLine(p1 - transform.rotation * (Vector3.right * _colliderRadius), p2 - transform.rotation * (Vector3.right * _colliderRadius));
     }
 }
