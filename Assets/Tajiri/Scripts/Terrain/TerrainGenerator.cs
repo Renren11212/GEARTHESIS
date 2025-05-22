@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private GameObject terrainPrefab;
+    
+    
 
-    // Update is called once per frame
-    void Update()
+    public void GenerateTerrain(Vector3 position)
     {
-        
+        GameObject terrain = Instantiate(terrainPrefab, position, Quaternion.identity);
+        terrain.transform.SetParent(transform);
     }
 }
