@@ -359,7 +359,7 @@ MonoBehaviour:
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
   m_ObsoleteContactShadows: 0
---- !u!1 &1328141637
+--- !u!1 &1428958345
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -367,22 +367,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1328141639}
-  - component: {fileID: 1328141640}
+  - component: {fileID: 1428958347}
+  - component: {fileID: 1428958346}
   m_Layer: 0
-  m_Name: RandomMap
+  m_Name: Sub Scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1328141639
+--- !u!114 &1428958346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428958345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SceneAsset: {fileID: 102900000, guid: a794572a3358bba489f3732328e9d1bf, type: 3}
+  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  AutoLoadScene: 1
+  _SceneGUID:
+    Value:
+      x: 2725595514
+      y: 1253803315
+      z: 842481560
+      w: 4213022338
+--- !u!4 &1428958347
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1328141637}
+  m_GameObject: {fileID: 1428958345}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -391,29 +412,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1328141640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1328141637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 969c375c90033714991f6ec95f5823e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chunkCountX: 6
-  chunkCountZ: 6
-  chunkSize: 16
-  maxHeight: 2
-  relief: 15
-  isSmooth: 0
-  isPerlin: 1
-  materials:
-  - {fileID: 2100000, guid: 7259324bbcfd4ea48ac7c6fb65c5fac9, type: 2}
-  meshes:
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1574674922
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +455,7 @@ Transform:
   m_GameObject: {fileID: 1574674922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.342931, y: 6.6977363, z: 28.03504}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -702,4 +700,4 @@ SceneRoots:
   - {fileID: 848510844}
   - {fileID: 1574674924}
   - {fileID: 1823356845}
-  - {fileID: 1328141639}
+  - {fileID: 1428958347}
