@@ -6,7 +6,7 @@ using Unity.Transforms;
 using Unity.Rendering;
 using UnityEngine;
 
-
+[BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct RandomMapGeneratorSystem : ISystem
 {
@@ -49,9 +49,8 @@ public partial struct RandomMapGeneratorSystem : ISystem
                 var cubeEntity = entityManager.CreateEntity();
 
                 entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
-                entityManager.AddComponentData(cubeEntity, new LocalToWorld());
-                entityManager.AddComponentData(cubeEntity, new MaterialMeshInfo());
-                entityManager.AddComponentData(cubeEntity, new WorldRenderBounds
+                entityManager.AddComponentData(cubeEntity, new MaterialMeshInfo()); // つかうメッシュとマテリアルのインデックスを確定
+                entityManager.AddComponentData(cubeEntity, new WorldRenderBounds    // 描画最適化
                 {
                     Value = new AABB
                     {
@@ -67,7 +66,6 @@ public partial struct RandomMapGeneratorSystem : ISystem
 
         entityManager.DestroyEntity(generatorEntity);
     }
-
 
     private static Color GetColor(float height, float maxHeight)
     {

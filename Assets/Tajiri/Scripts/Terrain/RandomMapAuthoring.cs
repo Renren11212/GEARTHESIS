@@ -15,6 +15,8 @@ public class RandomMapAuthoring : MonoBehaviour
     public bool isSmooth = false;
     public bool isPerlin = true;
     public RenderMeshArray renderMeshArray;
+    public Mesh cubeMesh;
+    public Material cubeMaterial;
 
     public class Baker : Baker<RandomMapAuthoring>
     {
@@ -50,8 +52,4 @@ public struct RandomMapGenerator : IComponentData
     public int isPerlin, isSmooth;
 }
 
-[Serializable]
-public class CubeRenderData : IComponentData
-{
-    public RenderMeshArray renderMeshArray;
-}
+
