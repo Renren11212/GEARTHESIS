@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1328141639}
-  - component: {fileID: 1328141638}
   - component: {fileID: 1328141640}
   m_Layer: 0
   m_Name: RandomMap
@@ -137,26 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1328141638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1328141637}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d051454317fa4684c9da4faa757a2209, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _width: 100
-  _depth: 100
-  _needToCollider: 0
-  _maxHeight: 2
-  _isPerlinNoiseMap: 1
-  _relief: 15
-  _isSmoothness: 0
-  _mapSize: 1
 --- !u!4 &1328141639
 Transform:
   m_ObjectHideFlags: 0
@@ -181,19 +160,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1328141637}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48571ebc57ba0ff4c80639d0ef6f45a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 969c375c90033714991f6ec95f5823e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 36
-  depth: 35
+  width: 100
+  depth: 100
   maxHeight: 10
   relief: 15
   isSmooth: 0
-  isPerlin: 1
-  cubeMeshs:
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  cubeMaterials:
-  - {fileID: 2100000, guid: 7259324bbcfd4ea48ac7c6fb65c5fac9, type: 2}
+  isPerlin: 0
+  materials: []
+  meshes: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
