@@ -190,8 +190,10 @@ MonoBehaviour:
   relief: 15
   isSmooth: 0
   isPerlin: 1
-  cubeMesh: {fileID: 0}
-  cubeMaterial: {fileID: 0}
+  cubeMeshs:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  cubeMaterials:
+  - {fileID: 2100000, guid: 7259324bbcfd4ea48ac7c6fb65c5fac9, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

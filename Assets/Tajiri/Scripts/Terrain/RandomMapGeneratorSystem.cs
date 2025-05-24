@@ -5,18 +5,17 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Rendering;
 using UnityEngine;
+using UnityEditorInternal;
+using UnityEngine.Rendering;
 
-[BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct RandomMapGeneratorSystem : ISystem
 {
-    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<RandomMapGenerator>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var generatorEntity = SystemAPI.GetSingletonEntity<RandomMapGenerator>();
@@ -49,7 +48,6 @@ public partial struct RandomMapGeneratorSystem : ISystem
                 var cubeEntity = entityManager.CreateEntity();
 
                 entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
-                entityManager.AddComponentData(cubeEntity, new MaterialMeshInfo()); // つかうメッシュとマテリアルのインデックスを確定
                 entityManager.AddComponentData(cubeEntity, new WorldRenderBounds    // 描画最適化
                 {
                     Value = new AABB

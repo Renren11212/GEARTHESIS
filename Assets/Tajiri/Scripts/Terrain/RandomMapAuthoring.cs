@@ -15,8 +15,16 @@ public class RandomMapAuthoring : MonoBehaviour
     public bool isSmooth = false;
     public bool isPerlin = true;
     public RenderMeshArray renderMeshArray;
-    public Mesh cubeMesh;
-    public Material cubeMaterial;
+    public Mesh[] cubeMeshs;
+    public Material[] cubeMaterials;
+
+    private void Awake()
+    {
+        renderMeshArray = new RenderMeshArray(
+            cubeMaterials,
+            cubeMeshs
+        );
+    }
 
     public class Baker : Baker<RandomMapAuthoring>
     {
