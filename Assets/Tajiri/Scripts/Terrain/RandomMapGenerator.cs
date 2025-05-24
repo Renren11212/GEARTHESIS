@@ -1,15 +1,9 @@
-using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Rendering;
 using UnityEngine;
-using UnityEditorInternal;
 using UnityEngine.Rendering;
-using System;
-using Unity.VisualScripting;
-using NUnit.Framework.Constraints;
 
 public class RandomMapGenerator : MonoBehaviour
 {
@@ -25,13 +19,17 @@ public class RandomMapGenerator : MonoBehaviour
     private float seedX;
     private float seedZ;
 
-    public void Start()
+    private void Awake()
     {
+        Debug.Log("地形生成を開始します");
+
+        // worldとEntityManagerを取得
         var world = World.DefaultGameObjectInjectionWorld;
         var entityManager = world.EntityManager;
 
         RenderMeshArray renderMeshArray = new RenderMeshArray(materials, meshes);
 
+        //　シード値を生成
         seedX = UnityEngine.Random.Range(0f, 100f);
         seedZ = UnityEngine.Random.Range(0f, 100f);
 
@@ -59,8 +57,8 @@ public class RandomMapGenerator : MonoBehaviour
                 var cubeEntity = entityManager.CreateEntity();
 
                 var desc = new RenderMeshDescription(
-                    shadowCastingMode: ShadowCastingMode.On,
-                    receiveShadows: true);
+                    shadowCastingMode: ShadowCastingMode.Off,
+                    receiveShadows: false);
 
                 // レンダリングコンポーネントを追加
                 RenderMeshUtility.AddComponents(
@@ -71,7 +69,7 @@ public class RandomMapGenerator : MonoBehaviour
                     MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0)
                 );
 
-                entityManager.SetComponentData(cubeEntity, LocalTransform.FromPosition(new float3(0, 0, 0)));
+                entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
 
                 entityManager.AddComponentData(cubeEntity, new WorldRenderBounds    // 描画最適化
                 {
@@ -83,26 +81,7 @@ public class RandomMapGenerator : MonoBehaviour
                 });
             }
         }
-    }
-
-    private static Color GetColor(float height, float maxHeight)
-    {
-        if (height > maxHeight * 0.3f)
-        {
-            UnityEngine.ColorUtility.TryParseHtmlString("#019540FF", out var color);
-            return color;
-        }
-        else if (height > maxHeight * 0.2f)
-        {
-            UnityEngine.ColorUtility.TryParseHtmlString("#2432ADFF", out var color);
-            return color;
-        }
-        else if (height > maxHeight * 0.1f)
-        {
-            UnityEngine.ColorUtility.TryParseHtmlString("#D4500EFF", out var color);
-            return color;
-        }
-        return Color.black;
+        Debug.Log("地形が生成されました");
     }
 }
 
