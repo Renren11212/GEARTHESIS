@@ -403,9 +403,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 969c375c90033714991f6ec95f5823e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 100
-  depth: 100
-  maxHeight: 10
+  width: 1000
+  depth: 1000
+  maxHeight: 3
   relief: 15
   isSmooth: 0
   isPerlin: 1
