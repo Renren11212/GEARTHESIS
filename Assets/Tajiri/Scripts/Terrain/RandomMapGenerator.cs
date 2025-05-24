@@ -4,11 +4,14 @@ using Unity.Transforms;
 using Unity.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
+using System;
+using UnityEditor.Build.Pipeline.Tasks;
 
 public class RandomMapGenerator : MonoBehaviour
 {
-    [SerializeField] private int width = 100;
-    [SerializeField] private int depth = 100;
+    [SerializeField] private int chunkCountX = 6;
+    [SerializeField] private int chunkCountZ = 6;
+    [SerializeField] private int chunkSize = 16;
     [SerializeField] private float maxHeight = 10;
     [SerializeField] private float relief = 15;
     [SerializeField] private bool isSmooth;
@@ -33,52 +36,65 @@ public class RandomMapGenerator : MonoBehaviour
         seedX = UnityEngine.Random.Range(0f, 100f);
         seedZ = UnityEngine.Random.Range(0f, 100f);
 
-        for (int x = 0; x < width; x++)
+        for (int cx = 0; cx < chunkCountX; cx++)
         {
-            for (int z = 0; z < depth; z++)
+            for (int cz = 0; cz < chunkCountZ; cz++)
             {
-                float height = 0f;
+                // チャンクデータ生成
+                ChunkData chunk = new ChunkData();
+                chunk.chunkPos = new int3(cx * chunkSize, 0, cz * chunkSize);
+                chunk.blocks = new byte[chunkSize, 1, chunkSize];
 
-                if (isPerlin)
+                // チャンク内のブロック生成
+                for (int x = 0; x < chunkSize; x++)
                 {
-                    float sampleX = (x + seedX) / relief;
-                    float sampleZ = (z + seedZ) / relief;
-                    height = maxHeight * Mathf.PerlinNoise(sampleX, sampleZ);
-                }
-                else
-                {
-                    height = UnityEngine.Random.Range(0f, maxHeight);
-                }
-
-                if (!isSmooth) height = math.round(height);
-
-                float3 position = new float3(x, height, z);
-
-                var cubeEntity = entityManager.CreateEntity();
-
-                var desc = new RenderMeshDescription(
-                    shadowCastingMode: ShadowCastingMode.Off,
-                    receiveShadows: false);
-
-                // レンダリングコンポーネントを追加
-                RenderMeshUtility.AddComponents(
-                    cubeEntity,
-                    entityManager,
-                    desc,
-                    renderMeshArray,
-                    MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0)
-                );
-
-                entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
-
-                entityManager.AddComponentData(cubeEntity, new WorldRenderBounds    // 描画最適化
-                {
-                    Value = new AABB
+                    for (int z = 0; z < chunkSize; z++)
                     {
-                        Center = position,
-                        Extents = new float3(0.5f, 0.5f, 0.5f)
+                        int worldX = cx * chunkSize + x;
+                        int worldZ = cz * chunkSize + z;
+
+                        float height = 0f;
+                        if (isPerlin)
+                        {
+                            float sampleX = (worldX + seedX) / relief;
+                            float sampleZ = (worldZ + seedZ) / relief;
+                            height = maxHeight * Mathf.PerlinNoise(sampleX, sampleZ);
+                        }
+                        else
+                        {
+                            height = UnityEngine.Random.Range(0f, maxHeight);
+                        }
+                        if (!isSmooth) height = math.round(height);
+
+                        chunk.blocks[x, 0, z] = (byte)math.clamp(height, 0, 255);
+
+                        float3 position = new float3(worldX, height, worldZ);
+
+                        var cubeEntity = entityManager.CreateEntity();
+                        var desc = new RenderMeshDescription(
+                            shadowCastingMode: ShadowCastingMode.Off,
+                            receiveShadows: false);
+
+                        RenderMeshUtility.AddComponents(
+                            cubeEntity,
+                            entityManager,
+                            desc,
+                            renderMeshArray,
+                            MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0)
+                        );
+
+                        entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
+                        entityManager.AddComponentData(cubeEntity, new WorldRenderBounds
+                        {
+                            Value = new AABB
+                            {
+                                Center = position,
+                                Extents = new float3(0.5f, 0.5f, 0.5f)
+                            }
+                        });
                     }
-                });
+                }
+                // 必要ならchunkをリストや辞書で管理
             }
         }
         Debug.Log("地形が生成されました");

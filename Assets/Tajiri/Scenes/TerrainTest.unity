@@ -131,12 +131,12 @@ GameObject:
   - component: {fileID: 848510843}
   - component: {fileID: 848510845}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &848510843
 Light:
   m_ObjectHideFlags: 0
@@ -403,9 +403,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 969c375c90033714991f6ec95f5823e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 1000
-  depth: 1000
-  maxHeight: 3
+  chunkCountX: 6
+  chunkCountZ: 6
+  chunkSize: 16
+  maxHeight: 2
   relief: 15
   isSmooth: 0
   isPerlin: 1
@@ -413,6 +414,55 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7259324bbcfd4ea48ac7c6fb65c5fac9, type: 2}
   meshes:
   - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1574674922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1574674924}
+  - component: {fileID: 1574674923}
+  m_Layer: 0
+  m_Name: Sky and Fog Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1574674923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574674922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 5799ce9e44f6a5f4ca2ebabc49743ab1, type: 2}
+--- !u!4 &1574674924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574674922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.342931, y: 6.6977363, z: 28.03504}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1823356841
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,5 +700,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 848510844}
+  - {fileID: 1574674924}
   - {fileID: 1823356845}
   - {fileID: 1328141639}
