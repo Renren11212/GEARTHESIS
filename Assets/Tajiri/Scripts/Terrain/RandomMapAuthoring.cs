@@ -5,6 +5,7 @@ using Unity.Transforms;
 using Unity.Rendering;
 using UnityEngine;
 using System;
+using UnityEngine.Rendering;
 
 public class RandomMapAuthoring : MonoBehaviour
 {
@@ -17,9 +18,15 @@ public class RandomMapAuthoring : MonoBehaviour
     public RenderMeshArray renderMeshArray;
     public Mesh[] cubeMeshs;
     public Material[] cubeMaterials;
-
+    
     private void Awake()
     {
+        if (cubeMeshs == null || cubeMaterials == null)
+        {
+            Debug.LogError("Mesh/Materialsがアサインされていません！");
+            return;
+        }
+
         renderMeshArray = new RenderMeshArray(
             cubeMaterials,
             cubeMeshs
@@ -49,15 +56,6 @@ public class RandomMapAuthoring : MonoBehaviour
             });
         }
     }
-}
-
-
-public struct RandomMapGenerator : IComponentData
-{
-    public int width, depth;
-    public float maxHeight, relief;
-    public float seedX, seedZ;
-    public int isPerlin, isSmooth;
 }
 
 

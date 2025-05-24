@@ -7,6 +7,7 @@ using Unity.Rendering;
 using UnityEngine;
 using UnityEditorInternal;
 using UnityEngine.Rendering;
+using System;
 
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct RandomMapGeneratorSystem : ISystem
@@ -21,6 +22,14 @@ public partial struct RandomMapGeneratorSystem : ISystem
         var generatorEntity = SystemAPI.GetSingletonEntity<RandomMapGenerator>();
         var generator = SystemAPI.GetComponent<RandomMapGenerator>(generatorEntity);
         var renderData = SystemAPI.ManagedAPI.GetComponent<CubeRenderData>(generatorEntity);
+
+        if (renderData.renderMeshArray == null || 
+            renderData.renderMeshArray.MaterialReferences == null || 
+            renderData.renderMeshArray.MeshReferences == null)
+        {
+            Debug.LogError("RenderMeshArrayが不正です");
+            return;
+        }
 
         var entityManager = state.EntityManager;
 
@@ -40,14 +49,26 @@ public partial struct RandomMapGeneratorSystem : ISystem
                     height = UnityEngine.Random.Range(0f, generator.maxHeight);
                 }
 
-                if (generator.isSmooth == 0)
-                    height = math.round(height);
+                if (generator.isSmooth == 0) height = math.round(height);
 
                 float3 position = new float3(x, height, z);
 
                 var cubeEntity = entityManager.CreateEntity();
+                
+                var desc = new RenderMeshDescription(
+                    shadowCastingMode: ShadowCastingMode.Off,
+                    receiveShadows: false);
 
-                entityManager.AddComponentData(cubeEntity, LocalTransform.FromPosition(position));
+                RenderMeshUtility.AddComponents(
+                    cubeEntity,
+                    entityManager,
+                    desc,
+                    renderData.renderMeshArray,
+                    MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0)
+                );
+
+                entityManager.SetComponentData(cubeEntity, LocalTransform.FromPosition(new float3(0, 0, 0)));
+
                 entityManager.AddComponentData(cubeEntity, new WorldRenderBounds    // 描画最適化
                 {
                     Value = new AABB
@@ -56,9 +77,6 @@ public partial struct RandomMapGeneratorSystem : ISystem
                         Extents = new float3(0.5f, 0.5f, 0.5f)
                     }
                 });
-
-                // RenderMeshArray をセット（shared component）
-                entityManager.AddSharedComponentManaged(cubeEntity, renderData.renderMeshArray);
             }
         }
 
