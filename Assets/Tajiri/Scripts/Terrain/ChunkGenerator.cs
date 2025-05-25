@@ -1,4 +1,3 @@
-using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
@@ -42,14 +41,16 @@ public partial struct ChunkGenerator : ISystem
 
         var desc = new RenderMeshDescription(
         shadowCastingMode: ShadowCastingMode.On,
-        receiveShadows: true );
+        receiveShadows: true);
 
-        for (int x = 0; x < 16; x++)
+        //NativeList<float3> blockPositions = new();
+
+        for (int x = 0; x < worldSettings.chunkSize; x++)
         {
-            for (int z = 0; z < 16; z++)
+            for (int z = 0; z < worldSettings.chunkSize; z++)
             {
-                int worldX = chunkPos.x - 8 + x;
-                int worldZ = chunkPos.z - 8 + z;
+                int worldX = chunkPos.x - worldSettings.chunkSize / 2 + x;
+                int worldZ = chunkPos.z - worldSettings.chunkSize / 2 + z;
                 float height = 0f;
                 float sampleX = (worldX + worldSettings.seedX) / noiseScale;
                 float sampleZ = (worldZ + worldSettings.seedZ) / noiseScale;
@@ -57,6 +58,8 @@ public partial struct ChunkGenerator : ISystem
                 height = math.round(height);
 
                 float3 position = new float3(worldX, height, worldZ);
+
+                //blockPositions.Add(position);
 
                 var cubeEntity = entityManager.CreateEntity();
 
@@ -79,5 +82,10 @@ public partial struct ChunkGenerator : ISystem
                 });
             }
         }
+    }
+
+    private void FaceTo()
+    {
+        
     }
 }

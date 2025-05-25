@@ -242,7 +242,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   type:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   atmosphericScattering:
     m_OverrideState: 0
@@ -290,8 +290,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 20000
   groundTint:
-    m_OverrideState: 0
-    m_Value: {r: 0.12, g: 0.1, b: 0.09, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
   groundColorTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}

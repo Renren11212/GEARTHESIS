@@ -19,6 +19,7 @@ public struct WorldSettings : IComponentData
 
     public float noiseScale;
     public float maxHeight;
+    public byte chunkSize; 
 }
 
 /// <summary>
