@@ -8,52 +8,57 @@ using UnityEngine.Rendering;
 
 public partial struct ChunkGenerator : ISystem
 {
-    private bool initialized;
+    // これは非効率だなぁ。そうに決まってる。
+    private bool _initialized;
 
     public void OnCreate(ref SystemState state)
     {
-        initialized = false;
+        _initialized = false;
     }
 
     public void OnUpdate(ref SystemState state)
     {
         if (!SystemAPI.HasSingleton<WorldSettings>()) return;
-        if (!initialized)
+        if (!_initialized)
         {
-            GenerateChunk(new int2(0, 0), ref state);
+            GenerateChunk(new int3(0, 0, 0), ref state);
             Debug.Log("Generated");
-            initialized = true;
+            _initialized = true;
         }
     }
 
-    [BurstCompile]
-    public void GenerateChunk(int2 chunkPos, ref SystemState state)
+    /// <summary>
+    /// 指定した位置を中心にチャンクを生成するメソッド
+    /// </summary>
+    public void GenerateChunk(int3 chunkPos, ref SystemState state)
     {
-        World world = World.DefaultGameObjectInjectionWorld;
-        EntityManager entityManager = world.EntityManager;
-
+        EntityManager entityManager = state.EntityManager;
         Entity worldSettingsEntity = SystemAPI.GetSingletonEntity<WorldSettings>();
         WorldSettings worldSettings = SystemAPI.GetComponent<WorldSettings>(worldSettingsEntity);
         BlockMeshAndMaterial blockMeshAndMaterial = SystemAPI.ManagedAPI.GetComponent<BlockMeshAndMaterial>(worldSettingsEntity);
+
+        float noiseScale = worldSettings.noiseScale;
+        float maxHeight = worldSettings.maxHeight;
+
+        var desc = new RenderMeshDescription(
+        shadowCastingMode: ShadowCastingMode.On,
+        receiveShadows: true );
 
         for (int x = 0; x < 16; x++)
         {
             for (int z = 0; z < 16; z++)
             {
-                int worldX = 16 + x;
-                int worldZ = 16 + z;
+                int worldX = chunkPos.x - 8 + x;
+                int worldZ = chunkPos.z - 8 + z;
                 float height = 0f;
-                float sampleX = (chunkPos.x + x + (worldSettings.Seed * 0.5f)) / 16;
-                float sampleZ = (chunkPos.y + z + worldSettings.Seed) / 16;
-                height = 3 * Mathf.PerlinNoise(sampleX, sampleZ);
+                float sampleX = (worldX + worldSettings.seedX) / noiseScale;
+                float sampleZ = (worldZ + worldSettings.seedZ) / noiseScale;
+                height = maxHeight * (noise.cnoise(new float2(sampleX, sampleZ)) * 0.5f + 0.5f); // Mathmaticのノイズ関数を使用 (範囲を正規化)
                 height = math.round(height);
 
-                float3 position = new float3(sampleX, height, sampleZ);
+                float3 position = new float3(worldX, height, worldZ);
 
                 var cubeEntity = entityManager.CreateEntity();
-                var desc = new RenderMeshDescription(
-                    shadowCastingMode: ShadowCastingMode.Off,
-                    receiveShadows: false);
 
                 RenderMeshUtility.AddComponents(
                     cubeEntity,

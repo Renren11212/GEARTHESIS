@@ -8,6 +8,8 @@ public class WorldAuthoring : MonoBehaviour
     public Material[] Materials;
     public Mesh[] Meshes;
     public int Seed;
+    public float NoiseScale = 4f;
+    public float MaxHeight = 3f;
 
     /// <summary>
     /// シード値を生成するメソッド
@@ -25,7 +27,7 @@ public class WorldAuthoring : MonoBehaviour
             // このMonoBehaviourクラスからEntityに変換されたものを取得
             var entity = GetEntity(TransformUsageFlags.None);
 
-            AddComponent(entity, new WorldSettings { Seed = authoring.Seed });
+            AddComponent(entity, new WorldSettings { seed = authoring.Seed, maxHeight = authoring.MaxHeight, noiseScale = authoring.NoiseScale });
             AddComponentObject(entity, new BlockMeshAndMaterial { renderMeshArray = new RenderMeshArray(authoring.Materials, authoring.Meshes) });
         }
     }

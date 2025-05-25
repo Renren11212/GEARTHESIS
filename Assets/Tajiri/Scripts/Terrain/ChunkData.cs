@@ -13,7 +13,12 @@ public struct ChunkData
 /// </summary>
 public struct WorldSettings : IComponentData
 {
-    public int Seed;
+    public int seed;
+    public int seedX => seed * 43; // 任意の素数
+    public int seedZ => seed * 51;
+
+    public float noiseScale;
+    public float maxHeight;
 }
 
 /// <summary>

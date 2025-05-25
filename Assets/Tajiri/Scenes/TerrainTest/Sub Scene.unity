@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 1328141639}
   - component: {fileID: 1328141641}
   m_Layer: 0
-  m_Name: RandomMap
+  m_Name: WorldAuthoring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,10 +164,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Materials:
-  - {fileID: 2100000, guid: 7259324bbcfd4ea48ac7c6fb65c5fac9, type: 2}
+  - {fileID: 2100000, guid: 27a83a809a196a84da4e625d2f3c3a2f, type: 2}
   Meshes:
   - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  Seed: 8836
+  Seed: 6339
+  NoiseScale: 22.21
+  MaxHeight: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
