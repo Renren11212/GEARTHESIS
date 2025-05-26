@@ -8,9 +8,19 @@ public struct ChunkData
     public byte[,,] blocks;
 }
 
+/// <summary>
+/// チャンク内のブロックデータ（存在フラグとID）
+/// </summary>
+public struct ChunkBlockDataBlob
+{
+    public BlobArray<byte> Exists; // 1:存在, 0:空
+    public BlobArray<byte> BlockIDs; // ブロックID
+}
+
 public struct ChunkComponent : IComponentData
 {
-    //public 
+    public int3 ChunkPosition;
+    public BlobAssetReference<ChunkBlockDataBlob> BlockData;
 }
 
 /// <summary>
@@ -33,25 +43,4 @@ public struct WorldSettings : IComponentData
 public class BlockMeshAndMaterial : IComponentData
 {
     public RenderMeshArray renderMeshArray;
-}
-
-/// <summary>
-/// 作成されたチャンクの中心座標
-/// </summary>
-public struct ChunkPosition : IComponentData
-{
-    public int3 Value;
-}
-
-/// <summary>
-/// チャンクのブロックデータ
-/// </summary>
-public struct ChunkBlocks : IComponentData
-{
-    public BlobAssetReference<ChunkBlocksBlob> BlockID;
-}
-
-public struct ChunkBlocksBlob
-{
-    public BlobArray<byte> Blocks;
 }
