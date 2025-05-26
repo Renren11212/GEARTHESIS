@@ -43,6 +43,7 @@ public partial struct ChunkGenerator : ISystem
         shadowCastingMode: ShadowCastingMode.On,
         receiveShadows: true);
 
+        // 三次元インデックスにブロックの有無を格納
         //NativeList<float3> blockPositions = new();
 
         for (int x = 0; x < worldSettings.chunkSize; x++)

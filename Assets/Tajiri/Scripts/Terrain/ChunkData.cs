@@ -8,6 +8,11 @@ public struct ChunkData
     public byte[,,] blocks;
 }
 
+public struct ChunkComponent : IComponentData
+{
+    //public 
+}
+
 /// <summary>
 /// 世界のシード
 /// </summary>
@@ -19,7 +24,7 @@ public struct WorldSettings : IComponentData
 
     public float noiseScale;
     public float maxHeight;
-    public byte chunkSize; 
+    public byte chunkSize;
 }
 
 /// <summary>
