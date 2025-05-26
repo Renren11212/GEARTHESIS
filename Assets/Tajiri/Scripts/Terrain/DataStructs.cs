@@ -13,8 +13,35 @@ public struct ChunkData
 /// </summary>
 public struct ChunkBlockDataBlob
 {
-    public BlobArray<byte> Exists; // 1:存在, 0:空
-    public BlobArray<byte> BlockIDs; // ブロックID
+    public BlobArray<byte> blockIDs; // ブロックID
+
+    public static int GetIndex(int x, int y, int z,  byte size = 16)
+    {
+        return x + y * size + z * size * size;
+    }
+
+    public void SetBlock(int x, int y, int z, BlockID id, byte size = 16)
+    {
+        blockIDs[GetIndex(x, y, z, size)] = (byte)id;
+    }
+
+    public BlockID GetBlockID(int x, int y, int z, byte size = 16)
+    {
+        return (BlockID)blockIDs[GetIndex(x, y, z, size)];
+    }
+
+    public bool HasBlock(int x, int y, int z, byte size = 16)
+    {
+        return GetBlockID(x, y, z, size) != BlockID.Air;
+    }
+}
+
+public enum BlockID
+{
+    Air,
+    Stone,
+    Grass,
+    Sand
 }
 
 public struct ChunkComponent : IComponentData

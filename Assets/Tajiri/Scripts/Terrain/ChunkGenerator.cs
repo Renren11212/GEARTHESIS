@@ -4,6 +4,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.Collections;
 
 public partial struct ChunkGenerator : ISystem
 {
@@ -36,15 +37,13 @@ public partial struct ChunkGenerator : ISystem
         WorldSettings worldSettings = SystemAPI.GetComponent<WorldSettings>(worldSettingsEntity);
         BlockMeshAndMaterial blockMeshAndMaterial = SystemAPI.ManagedAPI.GetComponent<BlockMeshAndMaterial>(worldSettingsEntity);
 
+        byte chunkSize = worldSettings.chunkSize;
         float noiseScale = worldSettings.noiseScale;
         float maxHeight = worldSettings.maxHeight;
 
         var desc = new RenderMeshDescription(
         shadowCastingMode: ShadowCastingMode.On,
         receiveShadows: true);
-
-        // 三次元インデックスにブロックの有無を格納
-        //NativeList<float3> blockPositions = new();
 
         for (int x = 0; x < worldSettings.chunkSize; x++)
         {
@@ -85,8 +84,46 @@ public partial struct ChunkGenerator : ISystem
         }
     }
 
+    private BlobAssetReference<ChunkBlockDataBlob> GenerateChunkDataArray(WorldSettings worldSettings, int3 chunkPos)
+    {
+        byte chunkSize = worldSettings.chunkSize;
+        int blockCount = chunkSize * chunkSize * chunkSize;
+
+        var builder = new BlobBuilder(Allocator.Temp);
+        ref ChunkBlockDataBlob root = ref builder.ConstructRoot<ChunkBlockDataBlob>();
+
+        // blockIDs配列の確保
+        BlobBuilderArray<byte> blockIDs = builder.Allocate(ref root.blockIDs, blockCount);
+
+        // 配列初期化
+        for (int x = 0; x < chunkSize; x++)
+        {
+            for (int y = 0; y < chunkSize; y++)
+            {
+                for (int z = 0; z < chunkSize; z++)
+                {
+                    int index = ChunkBlockDataBlob.GetIndex(x, y, z, chunkSize);
+
+                    // ここでノイズや高さ判定に応じてBlockIDを決定
+                    int worldX = chunkPos.x - chunkSize / 2 + x;
+                    int worldZ = chunkPos.z - chunkSize / 2 + z;
+                    float sampleX = (worldX + worldSettings.seedX) / worldSettings.noiseScale;
+                    float sampleZ = (worldZ + worldSettings.seedZ) / worldSettings.noiseScale;
+                    float height = worldSettings.maxHeight * (noise.cnoise(new float2(sampleX, sampleZ)) * 0.5f + 0.5f);
+                    height = math.round(height);
+
+                    blockIDs[index] = (byte)BlockID.Stone;
+                }
+            }
+        }
+
+        var blobRef = builder.CreateBlobAssetReference<ChunkBlockDataBlob>(Allocator.Persistent);
+        builder.Dispose();
+        return blobRef;
+    }
+
     private void FaceTo()
     {
-        
+
     }
 }
