@@ -43,8 +43,6 @@ public partial struct ChunkGenerator : ISystem
 		chunkData.chunkPosition = chunkPos;
 		chunkData.blockData = GenerateChunkDataArray(worldSettings, chunkPos);
 
-		Debug.Log(chunkData.blockData.Value.GetBlockID(0, 0, 0));
-
 		Entity chunk = entityManager.CreateEntity();
 
 		entityManager.AddComponentData(chunk, chunkData);
@@ -59,7 +57,7 @@ public partial struct ChunkGenerator : ISystem
 		var builder = new BlobBuilder(Allocator.Temp);
 		ref ChunkBlockDataBlob root = ref builder.ConstructRoot<ChunkBlockDataBlob>();
 
-		// blockIDs配列の確保
+		// blockIDs配列の確保(ChunkSizeが16なら4096 = 2^12 = 1.5byte <- 2byteにしたほうが良いかな)
 		BlobBuilderArray<byte> blockIDs = builder.Allocate(ref root.blockIDs, blockCount);
 
 		for (int x = 0; x < chunkSize; x++)

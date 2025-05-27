@@ -14,11 +14,6 @@ public struct ChunkBlockDataBlob
         return x + y * size + z * size * size;
     }
 
-    public void SetBlock(int x, int y, int z, BlockID id, byte size = 16)
-    {
-        blockIDs[GetIndex(x, y, z, size)] = (byte)id;
-    }
-
     public BlockID GetBlockID(int x, int y, int z, byte size = 16)
     {
         return (BlockID)blockIDs[GetIndex(x, y, z, size)];
