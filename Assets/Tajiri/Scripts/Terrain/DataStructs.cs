@@ -33,7 +33,7 @@ public enum BlockID
     Sand
 }
 
-public struct ChunkData : IComponentData
+public struct ChunkData : IComponentData    // Query
 {
     public int3 chunkPosition;
     public BlobAssetReference<ChunkBlockDataBlob> blockData;
@@ -42,7 +42,7 @@ public struct ChunkData : IComponentData
 /// <summary>
 /// 世界のシード
 /// </summary>
-public struct WorldSettings : IComponentData
+public struct WorldSettings : IComponentData        // Singleton
 {
     public int seed;
     public int seedX => seed * 43; // 任意の素数
@@ -56,7 +56,7 @@ public struct WorldSettings : IComponentData
 /// <summary>
 /// 使用するブロックのメッシュとマテリアル
 /// </summary>
-public class BlockMeshAndMaterial : IComponentData
+public class BlockMeshAndMaterial : IComponentData  // Singleton
 {
     public RenderMeshArray renderMeshArray;
 }

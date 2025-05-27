@@ -1,15 +1,15 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Rendering;
-using Unity.Transforms;
-using UnityEngine;
-using UnityEngine.Rendering;
 using Unity.Collections;
-using Unity.Burst;
+using UnityEngine;
+using System.IO;
 
+/// <summary>
+/// 
+/// </summary>
 public partial struct ChunkGenerator : ISystem
 {
-	// これは非効率だなぁ。そうに決まってる。
+	// これは非効率
 	private bool _initialized;
 
 	public void OnCreate(ref SystemState state)
@@ -22,7 +22,7 @@ public partial struct ChunkGenerator : ISystem
 		if (!SystemAPI.HasSingleton<WorldSettings>()) return;
 		if (!_initialized)
 		{
-			GenerateChunk(new int3(0, 0, 0), ref state);
+			GenerateChunkEntity(new int3(0, 0, 0), ref state);
 			Debug.Log("Generated");
 			_initialized = true;
 		}
@@ -31,7 +31,7 @@ public partial struct ChunkGenerator : ISystem
 	/// <summary>
 	/// 指定した位置を中心にチャンクを生成するメソッド
 	/// </summary>
-	public void GenerateChunk(int3 chunkPos, ref SystemState state)
+	public void GenerateChunkEntity(int3 chunkPos, ref SystemState state)
 	{
 		EntityManager entityManager = state.EntityManager;
 		Entity worldSettingsEntity = SystemAPI.GetSingletonEntity<WorldSettings>();
@@ -48,7 +48,7 @@ public partial struct ChunkGenerator : ISystem
 		entityManager.AddComponentData(chunk, chunkData);
 	}
 
-	[BurstCompile]	//TODO : Job化
+	// Helper
 	private BlobAssetReference<ChunkBlockDataBlob> GenerateChunkDataArray(WorldSettings worldSettings, int3 chunkPos)
 	{
 		byte chunkSize = worldSettings.chunkSize;
@@ -63,7 +63,7 @@ public partial struct ChunkGenerator : ISystem
 		for (int x = 0; x < chunkSize; x++)
 		for (int y = 0; y < chunkSize; y++)
 		for (int z = 0; z < chunkSize; z++)
-		{	
+		{
 			int index = ChunkBlockDataBlob.GetIndex(x, y, z, chunkSize);
 
 			// ここでノイズや高さ判定に応じてBlockIDを決定
@@ -81,14 +81,79 @@ public partial struct ChunkGenerator : ISystem
 
 		return blobRef;
 	}
-
-	private static readonly int3[] FaceDirections = new int3[]
+	
+	// ファイルに保存
+	public void SaveChunk(int3 chunkPos, ref SystemState state)
 	{
-		new int3(0, 1, 0),	//上
-		new int3(0, -1, 0),	//下
-		new int3(0, 0, 1),	//前
-		new int3(0, 0, -1),	//後
-		new int3(1, 0, 0),	//右
-		new int3(-1, 0, 0),	//左
-	};
+		foreach (var (chunkData, entity) in SystemAPI.Query<RefRO<ChunkData>>().WithEntityAccess())
+		{
+			if (chunkData.ValueRO.chunkPosition.Equals(chunkPos))
+			{
+				//var blockData = chunkData.ValueRO.blockData.Value;
+				string path = GetChunkFilePath(chunkPos);
+
+				using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+				using (var bw = new BinaryWriter(fs))
+				{
+					// chunkPosition
+					bw.Write(chunkPos.x);
+					bw.Write(chunkPos.y);
+					bw.Write(chunkPos.z);
+
+					// blockIDs
+					//int length = chunkData.ValueRO.blockIDs.Length;
+					//bw.Write(length);
+					//for (int i = 0; i < length; i++)
+					//{
+						//bw.Write(blockData.blockIDs[i]);
+					//}
+				}
+				break;
+			}
+		}
+	}
+
+    private string GetChunkFilePath(int3 chunkPos)
+    {
+        return Path.Combine(Application.persistentDataPath, $"chunk_{chunkPos.x}_{chunkPos.y}_{chunkPos.z}.bin");
+    }
+
+    public void LoadChunk(int3 chunkPos, ref SystemState state)
+    {
+        string path = GetChunkFilePath(chunkPos);
+        if (!File.Exists(path))
+        {
+            GenerateChunkEntity(chunkPos, ref state);
+            return;
+        }
+
+        using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+        using (var br = new BinaryReader(fs))
+        {
+            int x = br.ReadInt32();
+            int y = br.ReadInt32();
+            int z = br.ReadInt32();
+            int length = br.ReadInt32();
+
+            // ブロックデータの復元
+            var builder = new BlobBuilder(Allocator.Temp);
+            ref ChunkBlockDataBlob root = ref builder.ConstructRoot<ChunkBlockDataBlob>();
+            var blockIDs = builder.Allocate(ref root.blockIDs, length);
+            for (int i = 0; i < length; i++)
+            {
+                blockIDs[i] = br.ReadByte();
+            }
+            var blobRef = builder.CreateBlobAssetReference<ChunkBlockDataBlob>(Allocator.Persistent);
+            builder.Dispose();
+
+            // Entity生成
+            EntityManager entityManager = state.EntityManager;
+            Entity chunk = entityManager.CreateEntity();
+            entityManager.AddComponentData(chunk, new ChunkData
+            {
+                chunkPosition = new int3(x, y, z),
+                blockData = blobRef
+            });
+        }
+    }
 }
