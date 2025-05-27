@@ -2,12 +2,6 @@ using Unity.Mathematics;
 using Unity.Entities;
 using Unity.Rendering;
 
-public struct ChunkData
-{
-    public int3 chunkPos;
-    public byte[,,] blocks;
-}
-
 /// <summary>
 /// チャンク内のブロックデータ（存在フラグとID）
 /// </summary>
@@ -44,10 +38,10 @@ public enum BlockID
     Sand
 }
 
-public struct ChunkComponent : IComponentData
+public struct ChunkData : IComponentData
 {
-    public int3 ChunkPosition;
-    public BlobAssetReference<ChunkBlockDataBlob> BlockData;
+    public int3 chunkPosition;
+    public BlobAssetReference<ChunkBlockDataBlob> blockData;
 }
 
 /// <summary>
