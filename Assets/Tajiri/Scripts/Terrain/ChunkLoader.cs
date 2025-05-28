@@ -88,7 +88,7 @@ public partial struct ChunkLoader : ISystem
 		{
 			if (chunkData.ValueRO.chunkPosition.Equals(chunkPos))
 			{
-				//var blockData = chunkData.ValueRO.blockData.Value;
+				// var blockData = chunkData.ValueRO.blockData.Value;
 				string path = GetChunkFilePath(chunkPos);
 
 				using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -112,11 +112,13 @@ public partial struct ChunkLoader : ISystem
 		}
 	}
 
+    // helper
     private string GetChunkFilePath(int3 chunkPos)
     {
         return Path.Combine(Application.persistentDataPath, $"chunk_{chunkPos.x}_{chunkPos.y}_{chunkPos.z}.bin");
     }
 
+    // Job化最優先
     public void LoadChunk(int3 chunkPos, ref SystemState state)
     {
         string path = GetChunkFilePath(chunkPos);
