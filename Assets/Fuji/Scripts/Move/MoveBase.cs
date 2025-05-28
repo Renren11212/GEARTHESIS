@@ -4,38 +4,20 @@ using UnityEngine;
 public abstract class MoveBase : MonoBehaviour, IGameAction
 {
     [SerializeField]
-    private PlayerInput _input;
-
-    [SerializeField]
-    protected float _speed = 5f;
-
-    protected EntityController _controller;
+    private PlayerMovement _playerMovement;
 
     public abstract Vector3 Direction { get; }
 
-    public abstract InputPressType DefaultInputType { get; }
+    public virtual InputPressType DefaultInputType => InputPressType.CONTINUOUS;
     public InputPressType CurrentInputType { get; set; }
 
     public abstract KeyCode DefaultKeyCode { get; }
     public KeyCode CurrentKeyCode { get; set; }
 
+    public abstract string ActionName { get; }
+
     public virtual bool CanExecute() => _isEnabled;
     private bool _isEnabled = true;
-
-    protected virtual void Awake()
-    {
-        CurrentInputType = DefaultInputType;
-        CurrentKeyCode = DefaultKeyCode;
-
-        if (_input == null)
-        {
-            Debug.LogError("PlayerInputがセットされていません");
-            return;
-        }
-
-        _controller = GetComponent<EntityController>();
-        _input.RegisterAction(this);
-    }
 
     protected virtual void Update()
     {
@@ -49,6 +31,16 @@ public abstract class MoveBase : MonoBehaviour, IGameAction
     public virtual void Execute()
     {
         if (!_isEnabled) return;
-        _controller.Move(Direction * _speed * Time.deltaTime);
+        //Direction
+    }
+
+    public virtual void SetKeyConfig(KeyCode _)
+    {
+
+    }
+
+    public virtual void SetInputType(InputPressType _)
+    {
+
     }
 }
