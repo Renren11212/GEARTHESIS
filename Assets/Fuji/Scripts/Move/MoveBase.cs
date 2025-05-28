@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(EntityController))]
-public abstract class MoveBase : MonoBehaviour, IGameAction, IMovement
+public abstract class MoveBase : MonoBehaviour, IGameAction
 {
     [SerializeField]
     private PlayerInput _input;
@@ -13,7 +13,7 @@ public abstract class MoveBase : MonoBehaviour, IGameAction, IMovement
 
     public abstract Vector3 Direction { get; }
 
-    public virtual InputPressType DefaultInputType => InputPressType.CONTINUOUS;
+    public abstract InputPressType DefaultInputType { get; }
     public InputPressType CurrentInputType { get; set; }
 
     public abstract KeyCode DefaultKeyCode { get; }
@@ -50,11 +50,5 @@ public abstract class MoveBase : MonoBehaviour, IGameAction, IMovement
     {
         if (!_isEnabled) return;
         _controller.Move(Direction * _speed * Time.deltaTime);
-    }
-
-    public virtual void Move(Vector3 direction)
-    {
-        if (!_isEnabled) return;
-        
     }
 }
