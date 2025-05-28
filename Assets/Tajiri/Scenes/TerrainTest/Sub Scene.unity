@@ -168,8 +168,9 @@ MonoBehaviour:
   Meshes:
   - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   Seed: 6339
-  NoiseScale: 22.21
-  MaxHeight: 4
+  NoiseScale: 30
+  MaxHeight: 3
+  ChunkSize: 96
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

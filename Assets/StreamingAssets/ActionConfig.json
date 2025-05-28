@@ -1,0 +1,9 @@
+{
+    "configs": [
+        {
+            "ActionName": "TestMove",
+            "InputPressType": 1,
+            "KeyCode": 119
+        }
+    ]
+}

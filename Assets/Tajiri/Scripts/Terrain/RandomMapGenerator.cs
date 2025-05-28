@@ -41,9 +41,9 @@ public class RandomMapGenerator : MonoBehaviour
             for (int cz = 0; cz < chunkCountZ; cz++)
             {
                 // チャンクデータ生成
-                ChunkData chunk = new ChunkData();
-                chunk.chunkPos = new int3(cx * chunkSize, 0, cz * chunkSize);
-                chunk.blocks = new byte[chunkSize, 1, chunkSize];
+                //ChunkData chunk = new ChunkData();
+                //chunk.chunkPos = new int3(cx * chunkSize, 0, cz * chunkSize);
+                //.blocks = new byte[chunkSize, 1, chunkSize];
 
                 // チャンク内のブロック生成
                 for (int x = 0; x < chunkSize; x++)
@@ -66,7 +66,7 @@ public class RandomMapGenerator : MonoBehaviour
                         }
                         if (!isSmooth) height = math.round(height);
 
-                        chunk.blocks[x, 0, z] = (byte)math.clamp(height, 0, 255);
+                        //chunk.blocks[x, 0, z] = (byte)math.clamp(height, 0, 255);
 
                         float3 position = new float3(worldX, height, worldZ);
 
