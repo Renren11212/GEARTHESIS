@@ -60,21 +60,29 @@ public partial struct ChunkLoader : ISystem
 		BlobBuilderArray<byte> blockIDs = builder.Allocate(ref root.blockIDs, blockCount);
 
 		for (int x = 0; x < chunkSize; x++)
-		for (int y = 0; y < chunkSize; y++)
-		for (int z = 0; z < chunkSize; z++)
-		{
-			int index = ChunkBlockDataBlob.GetIndex(x, y, z, chunkSize);
+			for (int y = 0; y < chunkSize; y++)
+				for (int z = 0; z < chunkSize; z++)
+				{
+					int index = ChunkBlockDataBlob.GetIndex(x, y, z, chunkSize);
 
-			// ここでノイズや高さ判定に応じてBlockIDを決定
-			int worldX = chunkPos.x - chunkSize / 2 + x;
-			int worldZ = chunkPos.z - chunkSize / 2 + z;
-			float sampleX = (worldX + worldSettings.seedX) / worldSettings.noiseScale;
-			float sampleZ = (worldZ + worldSettings.seedZ) / worldSettings.noiseScale;
-			float height = worldSettings.maxHeight * (noise.cnoise(new float2(sampleX, sampleZ)) * 0.5f + 0.5f);
-			height = math.round(height);
+					// ここでノイズや高さ判定に応じてBlockIDを決定
+					int worldX = chunkPos.x - chunkSize / 2 + x;
+					int worldZ = chunkPos.z - chunkSize / 2 + z;
+					float sampleX = (worldX + worldSettings.seedX) / worldSettings.noiseScale;
+					float sampleZ = (worldZ + worldSettings.seedZ) / worldSettings.noiseScale;
+					float height = worldSettings.maxHeight * (noise.cnoise(new float2(sampleX, sampleZ)) * 0.5f + 0.5f);
+					height = math.round(height);
 
-			blockIDs[index] = (byte)BlockID.Stone;
+					blockIDs[index] = (byte)BlockID.Grass;
+
+					// 地下を生成
+					for (byte h = 0; h < height; h++)
+					{
+						int subIndex = ChunkBlockDataBlob.GetIndex(x, h, z, chunkSize);
+						blockIDs[subIndex] = (byte)BlockID.Stone;
+					}
 		}
+
 		var blobRef = builder.CreateBlobAssetReference<ChunkBlockDataBlob>(Allocator.Persistent);
 		builder.Dispose();
 
